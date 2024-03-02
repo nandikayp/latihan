@@ -10,7 +10,7 @@
     <body>
         <h2>Data Tugas</h2>
         <br />
-        @if (Auth::user()->role == 'admin')
+        @if (Auth::user()->role == 'guru')
             <button class="btn btn-primary" data-toggle="modal" data-target="#TambahSoal">Tambah Tugas</button>
         @endif
         <br>
@@ -31,7 +31,7 @@
 
                     <td> {{ $s->bataswaktu }} </td>
                     <td>
-                        @if (Auth::user()->role == 'admin')
+                        @if (Auth::user()->role == 'guru')
                             <button class="btn btn-success" data-toggle="modal" data-
                                 target="#EditSoal{{ $s->idsoal }}">Edit</button>
 
@@ -42,7 +42,7 @@
 
                             |
                         @endif
-                        @if (Auth::user()->role == 'user')
+                        @if (Auth::user()->role == 'siswa')
                             <button class="btn btn-info" data-toggle="modal"
                                 data-target="#WorkSoal{{ $s->idsoal }}">Kerjakan</button>
                         @endif

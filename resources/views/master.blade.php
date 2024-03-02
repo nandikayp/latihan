@@ -29,7 +29,7 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 
                         <ul class="nav navbar-nav navbar-left">
-                            @if (Auth::user()->role == 'admin')
+                            @if (Auth::user()->role == 'guru')
                                 <li class="nav-item"><a class="nav-link text text-primary" href="/user">User</a></li>
                             @endif
 

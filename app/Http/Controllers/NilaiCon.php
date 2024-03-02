@@ -10,7 +10,7 @@ class NilaiCon extends Controller
 {
     public function index()
     {
-        if (Auth::user()->role == 'admin') {
+        if (Auth::user()->role == 'guru') {
             $nilai = DB::table('nilai')
                 ->join('users', 'users.id', '=', 'nilai.iduser')
                 ->get();

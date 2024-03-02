@@ -26,7 +26,7 @@
                     <td> {{ $n->jawabansoal }} </td>
                     <td> {{ $n->nilai }} </td>
                     <td>
-                        @if (Auth::user()->role == 'admin')
+                        @if (Auth::user()->role == 'guru')
                             @if ($n->status != 'selesai')
                                 <button class="btn btn-danger" data-toggle="modal"
                                     data-target="#UpdateStatus{{ $n->idnilai }}">
