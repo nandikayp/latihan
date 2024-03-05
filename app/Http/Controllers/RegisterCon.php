@@ -14,12 +14,13 @@ class RegisterCon extends Controller
     }
     public function actionregister(Request $request)
     {
+        
         DB::table('users')->insert([
             'name' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'created_at' => date('Y-m-d H:i:s')
+            'role' => 'siswa',
+
         ]);
         Session::flash('message', 'Register Berhasil. Akun Anda suda Aktif silahkan Login menggunakan username dan password.');
         return redirect('register');

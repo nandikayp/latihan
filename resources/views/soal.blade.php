@@ -1,240 +1,239 @@
 @extends('master')
 @section('konten')
-    <!DOCTYPE html>
-    <html>
+    <h2 class="text text-primary" style="display: flex; text-align:center; margin-bottom:20px; margin-left:5rem">Data Soal
+    </h2>
 
-    <head>
-        <title>Tugas</title>
-    </head>
+    @if (Auth::user()->role == 'guru')
+        <button class="btn btn-primary mb-3" style="margin-left: 5rem;" data-bs-toggle="modal"
+            data-bs-target="#TambahSoal">Tambah Tugas</button>
+    @endif
 
-    <body>
-        <h2>Data Tugas</h2>
-        <br />
-        @if (Auth::user()->role == 'guru')
-            <button class="btn btn-primary" data-toggle="modal" data-target="#TambahSoal">Tambah Tugas</button>
-        @endif
-        <br>
-        <br>
-        <table class="table table-striped table-hover">
-            <tr>
-                <th>ID Tugas</th>
-                <th>Judul Materi</th>
-                <th>Deskripsi Tugas</th>
-                <th>Tenggat Waktu</th>
-                <th>Opsi</th>
-            </tr>
-            @foreach ($soal as $s)
-                <tr>
-                    <td> {{ $s->idsoal }} </td>
-                    <td> {{ $s->judulmateri }} </td>
-                    <td> {{ $s->deskripsisoal }} </td>
+    @if (session()->has('error'))
+        <div class="alert alert-danger col-md-3" style="margin-left: 5rem" role="alert">
+            {{ session('error') }}
+        </div>
+    @endif
+    <section class="intro">
+        <div class="mask d-flex align-items-start h-100">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-11">
+                        <div class="card bg-dark shadow-2-strong">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-dark table-borderless mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Id Tugas</th>
+                                                <th scope="col">Judul Materi</th>
+                                                <th scope="col">Deskripsi Tugas</th>
+                                                <th scope="col">Tenggat Waktu</th>
+                                                <th scope="col" style="padding-left: 4rem">Opsi</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($soal as $s)
+                                                <tr>
+                                                    <th scope="row">{{ $loop->iteration }}</th>
+                                                    <td>{{ $s->judulmateri }}</td>
+                                                    <td>{{ $s->deskripsisoal }}</td>
+                                                    <td>{{ $s->bataswaktu }}</td>
+                                                    <td>
+                                                        <div class="button-container" style="display: flex; gap:10px;">
+                                                            @if (Auth::user()->role == 'guru')
+                                                                <div class=""></div>
+                                                                <button class="btn btn-success" data-bs-toggle="modal"
+                                                                    data-bs-target="#EditSoal{{ $s->idsoal }}">Edit</button>
+                                                                |
+                                                                <form action="/soal/delete/{{ $s->idsoal }}">
+                                                                    <button type="submit" class="btn btn-danger"
+                                                                        onclick="return confirm('Apakah Ingin Menghapus Data')">Delete</button>
+                                                                </form>
+                                                            @endif
+                                                            @if (Auth::user()->role == 'siswa')
+                                                                @if ($s->isAnswered > 0)
+                                                                    <span>selesai</span>
+                                                                @else
+                                                                    @if ($s->bataswaktu <= date('Y-m-d'))
+                                                                        <span class="text-white">waktu habis</span>
+                                                                    @else
+                                                                        <button class="btn btn-info" data-bs-toggle="modal"
+                                                                            data-bs-target="#WorkSoal{{ $s->idsoal }}">Kerjakan</button>
+                                                                    @endif
+                                                                @endif
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <div class="modal fade" id="EditSoal{{ $s->idsoal }}" tabindex="-1"
+                                                    aria-labelledby="exampleModalLabel" aria-hidden="true">
 
-                    <td> {{ $s->bataswaktu }} </td>
-                    <td>
-                        @if (Auth::user()->role == 'guru')
-                            <button class="btn btn-success" data-toggle="modal" data-
-                                target="#EditSoal{{ $s->idsoal }}">Edit</button>
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Update
+                                                                    Tugas</h1>
 
-                            |
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="/soal/storeupdate" method="post"
+                                                                    class="form-floating">
 
-                            <button class="btn btn-danger" data-toggle="modal" data-
-                                target="#DelSoal{{ $s->idsoal }}">Delete</button>
+                                                                    @csrf
+                                                                    <input type="hidden" name="idsoal" id="kode"
+                                                                        readonly class="form-control"
+                                                                        value="{{ $s->idsoal }}">
+                                                                    <div class="">
+                                                                        <label for="floatingInputValue" class="mb-2">Judul
+                                                                            Materi</label>
 
-                            |
-                        @endif
-                        @if (Auth::user()->role == 'siswa')
-                            <button class="btn btn-info" data-toggle="modal"
-                                data-target="#WorkSoal{{ $s->idsoal }}">Kerjakan</button>
-                        @endif
-                    </td>
-                </tr>
-                <!-- Ini tampil form update soal -->
-                <div class="modal fade" id="EditSoal{{ $s->idsoal }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
+                                                                        <input type="text" name="judulmateri"
+                                                                            required="required" class="form-control"
+                                                                            value="{{ $s->judulmateri }}">
 
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Update Tugas</h1>
+                                                                    </div>
+                                                                    <div class="">
+                                                                        <label class="mt-3 mb-2"
+                                                                            for="floatingInputValue">Deskripsi
 
-                            </div>
-                            <div class="modal-body">
-                                <form action="/soal/storeupdate" method="post" class="form-floating">
+                                                                            Tugas</label>
 
-                                    @csrf
-                                    <input type="hidden" name="idsoal" id="kode" readonly class="form-control"
-                                        value="{{ $s->idsoal }}">
-                                    <div class="form-floating">
-                                        <label for="floatingInputValue">Judul
+                                                                        <br>
+                                                                        <textarea name="deskripsisoal" id="" cols="50" rows="10">{{ $s->deskripsisoal }}</textarea>
 
-                                            Materi</label>
+                                                                    </div>
+                                                                    <div class="">
+                                                                        <label for="floatingInputValue">Tenggat
 
-                                        <input type="text" name="judulmateri" required="required" class="form-control"
-                                            value="{{ $s->judulmateri }}">
+                                                                            Waktu</label>
 
-                                    </div>
-                                    <div class="form-floating">
-                                        <label for="floatingInputValue">Deskripsi
+                                                                        <input type="date" name="bataswaktu"
+                                                                            required="required" class="form-control"
+                                                                            value="{{ $s->bataswaktu }}">
 
-                                            Tugas</label>
+                                                                    </div>
+                                                                    <div class="modal-footer">
 
-                                        <br>
-                                        <textarea name="deskripsisoal" id="" cols="50" rows="10">{{ $s->deskripsisoal }}</textarea>
+                                                                        <button type="button" class="btn btn-secondary"
+                                                                            data-dismiss="modal">Close</button>
 
-                                    </div>
-                                    <div class="form-floating">
-                                        <label for="floatingInputValue">Tenggat
+                                                                        <button type="submit" class="btn btn-primary">Save
+                                                                            Updates</button>
 
-                                            Waktu</label>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
 
-                                        <input type="date" name="bataswaktu" required="required" class="form-control"
-                                            value="{{ $s->bataswaktu }}">
+                                                {{-- Kerjakan Soal --}}
+                                                <div class="modal fade" id="WorkSoal{{ $s->idsoal }}" tabindex="-1"
+                                                    aria-labelledby="exampleModalLabel"aria-hidden="true">
 
-                                    </div>
-                                    <div class="modal-footer">
+                                                    <div class="modal-dialog modal-lg">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Kerjakan
+                                                                    Tugas</h1>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <form action="/nilai/storeinput" method="post"
+                                                                    class="form-floating">
 
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                                    @csrf
+                                                                    <input type="hidden" name="idsoal" id="kode"
+                                                                        readonly class="form-control"
+                                                                        value="{{ $s->idsoal }}">
+                                                                    <div class="form-floating">
+                                                                        <p>Judul Materi : {{ $s->judulmateri }}</p>
 
-                                        <button type="submit" class="btn btn-primary">Save Updates</button>
+                                                                    </div>
+                                                                    <div class="form-floating">
+                                                                        <p>Deskripsi Tugas : {{ $s->deskripsisoal }}</p>
 
-                                    </div>
-                                </form>
+                                                                    </div>
+                                                                    <div class="form-floating">
+                                                                        <p>Batas Waktu : {{ $s->bataswaktu }}</p>
+                                                                    </div>
+                                                                    <div class="">
+                                                                        <label class="mb-2"
+                                                                            for="floatingInputValue">Jawaban</label>
+                                                                        <br>
+                                                                        <textarea name="jawabansoal" id="" cols="70" rows="10"></textarea>
+                                                                    </div>
+
+                                                                    <div class="modal-footer">
+                                                                        <button type="button" class="btn btn-danger"
+                                                                            data-bs-dismiss="modal">Tutup</button>
+
+                                                                        <button type="submit"
+                                                                            class="btn btn-success">Simpan Jawaban</button>
+
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <!-- Ini tampil form Kerjakan soal -->
-                <div class="modal fade" id="WorkSoal{{ $s->idsoal }}" tabindex="-1"
-                    aria-labelledby="exampleModalLabel"aria-hidden="true">
-
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Kerjakan Tugas</h1>
-
-                            </div>
-                            <div class="modal-body">
-                                <form action="/nilai/storeinput" method="post" class="form-floating">
-
-                                    @csrf
-                                    <input type="hidden" name="idsoal" id="kode" readonly class="form-control"
-                                        value="{{ $s->idsoal }}">
-                                    <div class="form-floating">
-                                        <p>Judul Materi : {{ $s->judulmateri }}</p>
-
-                                    </div>
-                                    <div class="form-floating">
-                                        <p>Deskripsi Tugas : {{ $s->deskripsisoal }}</p>
-
-                                    </div>
-                                    <div class="form-floating">
-
-                                        <p>Batas Waktu : {{ $s->bataswaktu }}</p>
-                                    </div>
-                                    <div class="form-floating">
-                                        <label for="floatingInputValue">Jawaban</label>
-                                        <br>
-                                        <textarea name="jawabansoal" id="" cols="70" rows="10"></textarea>
-                                    </div>
-                                    <div class="modal-footer">
-
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                                        <button type="submit" class="btn btn-primary">Simpan Jawaban</button>
-
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Ini tampil form delete soal -->
-                <div class="modal fade" id="DelSoal{{ $s->idsoal }}" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Hapus Tugas</h1>
-
-                            </div>
-                            <div class="modal-body">
-                                <form action="/soal/delete/{{ $s->idsoal }}" method="get" class="form-floating">
-                                    @csrf
-                                    <div>
-                                        <h3>Yakin mau menghapus data <b>{{ $s->judulmateri }}</b> ?</h3>
-
-                                    </div>
-                                    <div class="modal-footer">
-
-                                        <button type="button" class="btn btn-secondary"
-                                            data-dismiss="modal">Cancel</button>
-
-                                        <button type="submit" class="btn btn-primary">Yes</button>
-
-                                    </div>
-
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endforeach
-        </table>
-        <!-- Ini tampil form tambah produk -->
-
-        <div class="modal fade" id="TambahSoal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id ="exampleModalLabel">Tambah Tugas</h1>
-
-                    </div>
-                    <div class="modal-body">
-                        <form action="/soal/storeinput" method="post" class="form-floating"
-                            enctype="multipart/form-data">
-
-                            @csrf
-                            <div class="form-floating">
-                                <label for="floatingInputValue">Judul
-
-                                    Materi</label>
-
-                                <input type="text" name="judulmateri" required="required" class="form-control">
-
-                            </div>
-                            <div class="form-floating">
-                                <label for="floatingInputValue">Deskripsi
-
-                                    Tugas</label>
-
-                                <br>
-                                <textarea name="deskripsisoal" id="" cols="50" rows="10"></textarea>
-
-                            </div>
-                            <div class="form-floating">
-                                <label for="floatingInputValue">Tenggat
-
-                                    Waktu</label>
-
-                                <input type="date" name="bataswaktu" required="required" class="form-control">
-
-                            </div>
-
-                            <div class="modal-footer">
-
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-                                <button type="submit" class="btn btn-primary">Save changes</button>
-
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
-    </body>
+        </div>
+    </section>
 
-    </html>
+    {{-- Update Soal --}}
+
+
+    {{-- Tambah Soal --}}
+
+    <div class="modal fade" id="TambahSoal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id ="exampleModalLabel">Tambah Tugas</h1>
+
+                </div>
+                <div class="modal-body">
+                    <form action="/soal/storeinput" method="post" class="form-floating" enctype="multipart/form-data">
+
+                        @csrf
+                        <div class="">
+                            <label for="floatingInputValue" class="mb-2">Judul Materi</label>
+                            <input type="text" name="judulmateri" required="required" class="form-control">
+                        </div>
+                        <div class="">
+                            <label for="floatingInputValue" class="my-3">Deskripsi Tugas</label>
+
+                            <br>
+                            <textarea name="deskripsisoal" id="" cols="50" rows="10"></textarea>
+
+                        </div>
+                        <div class="">
+                            <label for="floatingInputValue" class="mt-3 mb-2">Tenggat Waktu</label>
+
+                            <input type="date" name="bataswaktu" required="required" class="form-control">
+
+                        </div>
+
+                        <div class="modal-footer">
+
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                            <button type="submit" class="btn btn-primary">Save changes</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection

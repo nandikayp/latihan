@@ -6,69 +6,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Classroom</title>
-    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <title>E-Tugas Tamansiswa</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="css/master.css">
-    <link rel="stylesheet" href="">
+    <link rel="stylesheet" href="/css/master.css">
 </head>
 
-<body>
-    <div class="container">
-        <div class="col-md-12">
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <!-- Brand and toggle get grouped for better mobile display -->
-
-                    <div class="navbar-brand text-nav" href="{{ route('dashboard') }}">Aplikasi Classroom</a>
-
-                    </div>
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-
-                        <ul class="nav navbar-nav navbar-left">
-                            @if (Auth::user()->role == 'guru')
-                                <li class="nav-item"><a class="nav-link text text-primary" href="/user">User</a></li>
-                            @endif
-
-                            <li class="nav-item"><a class="nav-link" href="/soal">Tugas</a></li>
-
-                            <li class="nav-item"><a class="nav-link" href="/nilai">Nilai</a></li>
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li class="dropdown">
-
-                                <a href="#" class="dropdown-toggle text text-secondary" data-toggle="dropdown"
-                                    role="button" aria- haspopup="true" aria-expanded="false"><i
-                                        class="fa fa-user text text-primary"></i>
-                                    {{ Auth::user()->email }}
-
-                                    <span class="caret"></span></a>
-                                <ul class="dropdown-menu">
-                                    <li><a>Level: {{ Auth::user()->role }}</a>
-
-                                    </li>
-                                    <li role="separator" class="divider"></li>
-
-                                    <li><a href="{{ route('actionlogout') }}" class="text text-danger"><i
-                                                class="fa fa-power-off text text-danger"></i> Log
-                                            Out</a></li>
-
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
-                    <!-- /.navbar-collapse -->
-                </div>
-                <!-- /.container-fluid -->
-            </nav>
+<body class="overflow-hidden">
+    <div class="d-flex">
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 300px; height: 100vh;">
+            <a href="{{ route('dashboard') }}"
+                class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <svg class="bi pe-none me-2" width="40" height="32">
+                    <use xlink:href="#bootstrap" />
+                </svg>
+                <span class="fs-4">Classroom</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li>
+                    <a href="{{ route('dashboard') }}" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16">
+                            <use xlink:href="#speedometer2" />
+                        </svg>
+                        Dashboard
+                    </a>
+                </li>
+                <li>
+                    <a href="/soal" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16">
+                            <use xlink:href="#table" />
+                        </svg>
+                        Tugas
+                    </a>
+                </li>
+                <li>
+                    <a href="/nilai" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16">
+                            <use xlink:href="#grid" />
+                        </svg>
+                        Nilai
+                    </a>
+                </li>
+                <li>
+                </li>
+            </ul>
+            <hr>
+            <div class="dropdown">
+                <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="https://github.com/mdo.png" alt="" width="32" height="32"
+                        class="rounded-circle me-2">
+                    <strong>{{ Auth::user()->email }}</strong>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
+                    <li><a class="dropdown-item" href="{{ route('actionlogout') }}">Sign out</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container" style="margin-top : 100px;">
             @yield('konten')
         </div>
     </div>
-    </div>
 </body>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </html>

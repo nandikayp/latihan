@@ -4,63 +4,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-    <title>Register User</title>
+    <title>Login – E-Tugas Tamansiswa</title>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
-    <link rel="stylesheet" href="css/register.css">
+    <link rel="stylesheet" href="css/login.css">
 </head>
 
 <body>
-    <div class="container "><br>
-        <div class="col-md-6 col-md-offset-3">
-            <h2 class="text-center text-judul" style="color: white">FORM REGISTER USER</h3>
+    <div class="container wrapper">
+
+        <div class="">
+            <h2 class="text-center "><b class="text-app">Aplikasi</b><br>Classroom</h2>
+            @if (session()->has('message'))
+                <h1>{{ session('message') }}</h1>
+            @endif
+            <hr>
+            @if (session('error'))
+                <div class="alert alert-danger"> <b>Opps!</b>
+
+                    {{ session('error') }} </div>
+            @endif
+            <form action="{{ route('actionregister') }}" method="post">
+                @csrf
+                <div class="form-group p-3 mt-3 ">
+
+                    <input type="email" name="email" style="height: 5rem"
+                        class=" mb-3  form-control form-field d-flex align-items-center" placeholder="Email"
+                        required="">
+
+                </div>
+                <div class="form-group p-3 mt-3 ">
+
+                    <input type="text" name="username" style="height: 5rem"
+                        class=" mb-3  form-control form-field d-flex align-items-center" placeholder="Username"
+                        required="">
+
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" style="height: 5rem"
+                        class="form-control form-field d-flex align-items-center" placeholder="Password" required="">
+
+                </div>
+
+                <button type="submit" class="btn btn-danger btn-block">Register</button>
+
                 <hr>
-                @if (session('message'))
-                    <div class="alert alert-success"> {{ session('message') }}
+                <p class="text-center text-peri">Sudah punya akun? <a href="/" style="font-size: medium"
+                        class="te">Login</a>
+                    Disini!
+                </p>
 
-                    </div>
-                @endif
-                <form action="{{ route('actionregister') }}" method="post">
-                    @csrf
-                    <div class="form-group">
-                        <label style="color: white"><i class="fa fa-envelope"></i>
-
-                            Email</label>
-
-                        <input type="email" name="email" class="form-control" placeholder="Email" required="">
-
-                    </div>
-
-                    <div class="form-group"> <label style="color: white"><i class="fa fa-user"></i> Username</label>
-
-                        <input type="text" name="username" class="form-control" placeholder="Username"
-                            required="">
-
-                    </div>
-
-                    <div class="form-group"> <label style="color: white"><i class="fa fa-key"></i> Password</label>
-
-                        <input type="password" name="password" class="form-control" placeholder="Password"
-                            required="">
-
-                    </div>
-
-                    <div class="form-group" style="color: white"> <label><i class="fa fa-address-book"></i> Role</label>
-
-                        <input type="text" name="role" class="form-control" value="user" readonly>
-
-                    </div>
-
-                    <button type="submit" class="btn btn-primary btn-block">
-
-                        <i class="fa fa-user"></i> Register</button>
-                    <hr>
-                    <p class="text-center" style="color: white">Sudah punya akun silahkan <a href="/">Login
-                            Disini!</a></p>
-                </form>
+            </form>
         </div>
     </div>
 </body>

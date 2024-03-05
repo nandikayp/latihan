@@ -26,6 +26,9 @@ class NilaiCon extends Controller
     }
     public function storeupdate(Request $request)
     {
+        if ($request->nilai > 100) {
+            return redirect()->back()->with('error', 'Nilai Tidak Boleh Melebihi 100');
+        }
         // update data nilai
         DB::table('nilai')->where('idnilai', $request->idnilai)->update([
             'status' => 'selesai',
